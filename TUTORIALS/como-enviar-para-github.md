@@ -1,35 +1,39 @@
-# Como enviar o projeto para o GitHub
+# Tutorial — GitHub + Formulário online
 
 Projeto: `Github-Manuelfariasousa-DMFS`
-Conta: **manuelfariasousa-DMFS**
+Conta GitHub: **manuelfariasousa-DMFS**
 Repo: https://github.com/manuelfariasousa-DMFS/Github-Manuelfariasousa-DMFS
 
-> ✅ **Estado atual:** repo já criado e ligado. O git já está autenticado
-> via GitHub CLI (`gh`). Para o dia-a-dia salta para a secção
+> ✅ **Já está tudo a funcionar.** Repo criado, autenticado, e o formulário
+> publicado online. Para o dia-a-dia só precisas da secção
 > [Alterações futuras](#alteracoes-futuras).
 
 ---
 
-## Importante: a password NÃO chega
-
-Desde **agosto de 2021** o GitHub deixou de aceitar a password da conta para
-operações de `git` (push/pull por HTTPS). O servidor responde:
+## Link do formulário (para o CMS da escola)
 
 ```
-remote: Password authentication is not supported for Git operations.
+https://manuelfariasousa-dmfs.github.io/Github-Manuelfariasousa-DMFS/sugestoes.html
 ```
 
-A password serve **só** para entrar no site github.com. Para enviar código
-precisas de **autenticar** uma destas formas:
+É este o link a meter no CMS para reencaminhar para a caixa de sugestões.
 
-1. **GitHub CLI (`gh`)** — login pelo browser. ← foi este o método usado.
-2. **Personal Access Token (PAT)** — um "token" que substitui a password.
+⚠️ **NÃO uses** o link `github.com/.../blob/...` nem o `raw.githubusercontent...`:
+o primeiro mostra só o código-fonte, o segundo serve como texto. Nenhum
+**mostra o formulário**. Só o link `github.io` acima é que renderiza a página.
+
+### Primeira sugestão = confirmar email (uma vez)
+
+O envio usa o serviço **formsubmit.co**, que manda as sugestões para
+`germanovazmartins@gmail.com`. Na **primeira** submissão, o formsubmit envia
+um email de confirmação a esse endereço. Abre-o e clica em confirmar **uma
+vez**. A partir daí todas as sugestões chegam automaticamente.
 
 ---
 
-## Alterações futuras
+## Alteracoes futuras
 
-Já está tudo ligado e autenticado. Para enviar mudanças:
+Editaste o formulário ou outro ficheiro? Envia assim:
 
 ```powershell
 cd "D:\XAMPP\htdocs\Github-Manuelfariasousa-DMFS"
@@ -38,13 +42,31 @@ git commit -m "descrição da mudança"
 git push
 ```
 
-Sem pedir password — o `gh` trata da autenticação.
+O site online (GitHub Pages) reconstrói sozinho **~1 minuto** depois do push.
+
+> 💡 Se mudares o `sugestoes.html`, é esse o ficheiro que o site mostra.
+> O `sugestoes.php` é só uma cópia (não é usado pelo site online).
 
 ---
 
-## Recuperar / refazer a ligação (se preciso)
+## Porque a password NÃO chega
 
-Só necessário se mudares de PC, perderes o login, ou começares projeto novo.
+Desde **agosto de 2021** o GitHub não aceita a password da conta para o `git`
+(push/pull HTTPS). O servidor responde:
+
+```
+remote: Password authentication is not supported for Git operations.
+```
+
+A password serve **só** para entrar no site github.com. Para o `git` enviar
+código, autentica-se via **GitHub CLI (`gh`)** — foi o método usado aqui —
+ou via **token (PAT)**.
+
+---
+
+## Como tudo foi montado (referência)
+
+Só precisas disto se mudares de PC, perderes o login, ou criares projeto novo.
 
 ### 1. Instalar o gh (uma vez por PC)
 
@@ -60,12 +82,11 @@ Fecha e reabre o terminal.
 gh auth login --hostname github.com --git-protocol https --web
 ```
 
-- Mostra um código tipo `XXXX-XXXX`.
-- Abre https://github.com/login/device
-- Cola o código e autoriza.
+- Mostra código `XXXX-XXXX`.
+- Abre https://github.com/login/device, cola o código, autoriza.
+- O browser tem de estar logado na conta **manuelfariasousa-DMFS**.
 
-⚠️ O browser tem de estar logado na conta **manuelfariasousa-DMFS**
-(não outra conta). Confirma com:
+Confirmar:
 
 ```powershell
 gh auth status
@@ -73,7 +94,7 @@ gh auth status
 
 Deve dizer `Logged in ... account manuelfariasousa-DMFS`.
 
-### 3. Ligar a pasta ao repo (se for repo novo)
+### 3. Criar repo + primeiro envio
 
 ```powershell
 cd "D:\XAMPP\htdocs\Github-Manuelfariasousa-DMFS"
@@ -83,44 +104,45 @@ git commit -m "Primeiro commit"
 gh repo create Github-Manuelfariasousa-DMFS --public --source=. --remote=origin --push
 ```
 
-`gh repo create` cria o repo no GitHub **e** faz o primeiro push de uma vez.
+### 4. Publicar online (GitHub Pages)
+
+```powershell
+gh api -X POST repos/manuelfariasousa-DMFS/Github-Manuelfariasousa-DMFS/pages -f "source[branch]=main" -f "source[path]=/"
+```
+
+> No Git Bash mete `MSYS_NO_PATHCONV=1` antes do `gh api` (senão reescreve o URL).
+
+Espera ~1 min e abre o link `github.io` da secção do topo.
 
 ---
 
-## Alternativa — Personal Access Token (sem gh)
+## Alternativa — Token (PAT), sem gh
 
-### 1. Criar o token
-
-1. github.com → conta **manuelfariasousa-DMFS** → **Settings**.
-2. **Developer settings** → **Personal access tokens** → **Tokens (classic)**.
-3. **Generate new token (classic)**, marca scope **`repo`**, gera.
-4. Copia o token (`ghp_...`). Só aparece uma vez.
-
-### 2. Push
-
-```powershell
-git push
-```
-
-Quando pedir credenciais:
-- **Username**: `manuelfariasousa-DMFS`
-- **Password**: cola o **token** `ghp_...` (NÃO a password da conta)
+1. github.com (conta DMFS) → **Settings** → **Developer settings**
+   → **Personal access tokens** → **Tokens (classic)**.
+2. **Generate new token (classic)**, scope **`repo`**, gera, copia (`ghp_...`).
+3. No `git push`, quando pedir:
+   - Username: `manuelfariasousa-DMFS`
+   - Password: cola o **token** (NÃO a password da conta)
 
 ---
 
 ## Resolver problemas
 
-| Erro | Causa | Solução |
-|------|-------|---------|
-| `Password authentication is not supported` | usaste a password | usa `gh` ou token |
-| `repository not found` | repo não existe / conta errada | confirma `gh auth status` |
-| `remote origin already exists` | remote já configurado | `git remote -v` para ver; já está bem |
-| `gh: command not found` | gh não instalado | secção "Recuperar" passo 1 |
-| pede login outra vez | token expirou | repete `gh auth login` |
+| Sintoma | Causa | Solução |
+|---------|-------|---------|
+| Link dá **404** | Pages não ativo / ficheiro errado | passo 4; usa link `.html` |
+| Vejo código em vez do formulário | usaste link `blob` ou `raw` | usa link `github.io/.../sugestoes.html` |
+| `Password authentication is not supported` | usaste password | usa `gh` ou token |
+| `repository not found` | conta errada | `gh auth status` |
+| `gh: command not found` | gh não instalado | passo 1 |
+| Sugestões não chegam ao email | falta confirmar formsubmit | confirma o email da 1ª submissão |
+| Mudança não aparece no site | Pages ainda a reconstruir | espera ~1 min e recarrega |
 
 ---
 
 ## Conteúdo do projeto
 
-- `sugestoes.php` — formulário de sugestões (envia via formsubmit.co).
+- `sugestoes.html` — formulário online (é este que o site mostra).
+- `sugestoes.php` — cópia local (XAMPP); não usado pelo site online.
 - `TUTORIALS/` — este guia.
