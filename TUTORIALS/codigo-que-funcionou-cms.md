@@ -23,7 +23,7 @@ Mostra a caixa de sugestões embebida na página (iframe).
 - Ajustar tamanho se preciso: muda `max-width:650px` (largura) e
   `height:500px` (altura).
 - Primeira sugestão: o formsubmit pede confirmação por email a
-  `germanovazmartins@gmail.com` — confirma uma vez.
+  `diretor.dmfs@gmail.com` — confirma uma vez.
 
 > As outras opções de incorporação (botão, link, redirect) estão em
 > [codigo-para-o-cms.md](codigo-para-o-cms.md).

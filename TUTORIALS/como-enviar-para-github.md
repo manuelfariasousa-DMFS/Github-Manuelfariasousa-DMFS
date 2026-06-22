@@ -25,7 +25,7 @@ o primeiro mostra só o código-fonte, o segundo serve como texto. Nenhum
 ### Primeira sugestão = confirmar email (uma vez)
 
 O envio usa o serviço **formsubmit.co**, que manda as sugestões para
-`germanovazmartins@gmail.com`. Na **primeira** submissão, o formsubmit envia
+`diretor.dmfs@gmail.com`. Na **primeira** submissão, o formsubmit envia
 um email de confirmação a esse endereço. Abre-o e clica em confirmar **uma
 vez**. A partir daí todas as sugestões chegam automaticamente.
 

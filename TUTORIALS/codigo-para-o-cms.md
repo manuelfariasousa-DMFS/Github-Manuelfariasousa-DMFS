@@ -91,4 +91,4 @@ Usa só se quiseres uma página dedicada que não mostra mais nada.
 - Se o CMS "limpar" o código ao gravar, é porque filtra HTML — nesse caso
   usa a **Opção 2** (link simples), que quase nunca é bloqueada.
 - Primeira sugestão: o serviço formsubmit pede **confirmação por email**
-  (a `germanovazmartins@gmail.com`). Confirma uma vez e fica a funcionar.
+  (a `diretor.dmfs@gmail.com`). Confirma uma vez e fica a funcionar.
