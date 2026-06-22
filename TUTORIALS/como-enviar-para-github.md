@@ -1,7 +1,12 @@
 # Como enviar o projeto para o GitHub
 
-Guia para colocar a pasta `Github-Manuelfariasousa-DMFS` no GitHub
-(conta: **manuelfariasousa-DMFS**).
+Projeto: `Github-Manuelfariasousa-DMFS`
+Conta: **manuelfariasousa-DMFS**
+Repo: https://github.com/manuelfariasousa-DMFS/Github-Manuelfariasousa-DMFS
+
+> ✅ **Estado atual:** repo já criado e ligado. O git já está autenticado
+> via GitHub CLI (`gh`). Para o dia-a-dia salta para a secção
+> [Alterações futuras](#alteracoes-futuras).
 
 ---
 
@@ -14,89 +19,92 @@ operações de `git` (push/pull por HTTPS). O servidor responde:
 remote: Password authentication is not supported for Git operations.
 ```
 
-A password (`examesdois`) serve **só** para entrar no site github.com.
-Para enviar código precisas de **uma destas** duas coisas:
+A password serve **só** para entrar no site github.com. Para enviar código
+precisas de **autenticar** uma destas formas:
 
-1. **GitHub CLI (`gh`)** — fazes login pelo browser. (mais fácil)
+1. **GitHub CLI (`gh`)** — login pelo browser. ← foi este o método usado.
 2. **Personal Access Token (PAT)** — um "token" que substitui a password.
 
 ---
 
-## Opção A — GitHub CLI (recomendado)
+## Alterações futuras
 
-### 1. Instalar o gh
+Já está tudo ligado e autenticado. Para enviar mudanças:
 
-Windows (PowerShell):
+```powershell
+cd "D:\XAMPP\htdocs\Github-Manuelfariasousa-DMFS"
+git add .
+git commit -m "descrição da mudança"
+git push
+```
+
+Sem pedir password — o `gh` trata da autenticação.
+
+---
+
+## Recuperar / refazer a ligação (se preciso)
+
+Só necessário se mudares de PC, perderes o login, ou começares projeto novo.
+
+### 1. Instalar o gh (uma vez por PC)
 
 ```powershell
 winget install --id GitHub.cli
 ```
 
-Fecha e reabre o terminal a seguir.
+Fecha e reabre o terminal.
 
-### 2. Login (abre o browser)
+### 2. Login na conta DMFS (browser)
 
 ```powershell
-gh auth login
+gh auth login --hostname github.com --git-protocol https --web
 ```
 
-Escolhe:
-- `GitHub.com`
-- `HTTPS`
-- `Login with a web browser`
+- Mostra um código tipo `XXXX-XXXX`.
+- Abre https://github.com/login/device
+- Cola o código e autoriza.
 
-Copia o código que aparece, cola no browser, autoriza.
+⚠️ O browser tem de estar logado na conta **manuelfariasousa-DMFS**
+(não outra conta). Confirma com:
 
-### 3. Criar repo + enviar tudo
+```powershell
+gh auth status
+```
+
+Deve dizer `Logged in ... account manuelfariasousa-DMFS`.
+
+### 3. Ligar a pasta ao repo (se for repo novo)
 
 ```powershell
 cd "D:\XAMPP\htdocs\Github-Manuelfariasousa-DMFS"
-git init
+git init -b main
 git add .
 git commit -m "Primeiro commit"
-gh repo create Github-Manuelfariasousa-DMFS --public --source=. --push
+gh repo create Github-Manuelfariasousa-DMFS --public --source=. --remote=origin --push
 ```
 
-Pronto. O código fica em:
-`https://github.com/manuelfariasousa-DMFS/Github-Manuelfariasousa-DMFS`
+`gh repo create` cria o repo no GitHub **e** faz o primeiro push de uma vez.
 
 ---
 
-## Opção B — Personal Access Token (PAT)
+## Alternativa — Personal Access Token (sem gh)
 
 ### 1. Criar o token
 
-1. Entra em github.com com a conta **manuelfariasousa-DMFS**.
-2. Canto superior direito → **Settings**.
-3. Em baixo à esquerda → **Developer settings**.
-4. **Personal access tokens** → **Tokens (classic)**.
-5. **Generate new token (classic)**.
-6. Nome qualquer, validade à escolha.
-7. Marca a caixa **`repo`** (dá acesso aos repositórios).
-8. **Generate token** → copia o token (começa por `ghp_...`).
-   ⚠️ Só aparece uma vez. Guarda já.
+1. github.com → conta **manuelfariasousa-DMFS** → **Settings**.
+2. **Developer settings** → **Personal access tokens** → **Tokens (classic)**.
+3. **Generate new token (classic)**, marca scope **`repo`**, gera.
+4. Copia o token (`ghp_...`). Só aparece uma vez.
 
-### 2. Criar o repo no site
-
-1. Botão **+** (cima à direita) → **New repository**.
-2. Nome: `Github-Manuelfariasousa-DMFS`.
-3. Public. **Não** marques README/gitignore. → **Create repository**.
-
-### 3. Enviar o código
+### 2. Push
 
 ```powershell
-cd "D:\XAMPP\htdocs\Github-Manuelfariasousa-DMFS"
-git init
-git add .
-git commit -m "Primeiro commit"
-git branch -M main
-git remote add origin https://github.com/manuelfariasousa-DMFS/Github-Manuelfariasousa-DMFS.git
-git push -u origin main
+git push
 ```
 
 Quando pedir credenciais:
 - **Username**: `manuelfariasousa-DMFS`
-- **Password**: **cola o token `ghp_...`** (NÃO a password `examesdois`)
+- **Password**: cola o **token** `ghp_...` (NÃO a password da conta)
 
 ---
 
@@ -104,21 +112,15 @@ Quando pedir credenciais:
 
 | Erro | Causa | Solução |
 |------|-------|---------|
-| `Password authentication is not supported` | usaste a password | usa token ou `gh` |
-| `repository not found` | repo não existe | cria primeiro (passo B2) ou usa `gh repo create` |
-| `remote origin already exists` | já adicionaste o remote | `git remote remove origin` e repete |
-| `gh: command not found` | gh não instalado | Opção A passo 1 |
+| `Password authentication is not supported` | usaste a password | usa `gh` ou token |
+| `repository not found` | repo não existe / conta errada | confirma `gh auth status` |
+| `remote origin already exists` | remote já configurado | `git remote -v` para ver; já está bem |
+| `gh: command not found` | gh não instalado | secção "Recuperar" passo 1 |
+| pede login outra vez | token expirou | repete `gh auth login` |
 
 ---
 
-## Notas
+## Conteúdo do projeto
 
-- Pasta atual tem: `sugestoes.php` + esta pasta `TUTORIALS`.
-- O `sugestoes.php` envia sugestões via formsubmit.co para um email.
-- Depois do primeiro push, para enviar alterações futuras:
-
-```powershell
-git add .
-git commit -m "descrição da mudança"
-git push
-```
+- `sugestoes.php` — formulário de sugestões (envia via formsubmit.co).
+- `TUTORIALS/` — este guia.
